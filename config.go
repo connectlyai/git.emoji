@@ -75,6 +75,9 @@ func loadConfig() {
 		if err != nil {
 			fatalf("failed to parse config file %s: %s", current, err)
 		}
+		if len(allTypes) == 0 {
+			allTypes = defaultConfig()
+		}
 	} else {
 		debugf("no config file found")
 		allTypes = defaultConfig()
@@ -110,10 +113,10 @@ func marshalConfigFile(config []*Type) []byte {
 	var buf bytes.Buffer
 	for _, typ := range config {
 		buf.WriteString(fmt.Sprintf("[git.emoji %q]\n", typ.Name))
-		buf.WriteString("icons = ")
+		buf.WriteString("    icons = ")
 		buf.WriteString(strings.Join(typ.Icons, " "))
 		buf.WriteString("\n")
-		buf.WriteString("alias = ")
+		buf.WriteString("    alias = ")
 		buf.WriteString(strings.Join(typ.Alias, " "))
 		buf.WriteString("\n")
 	}

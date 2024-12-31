@@ -30,6 +30,8 @@ func main() {
 
 	case "write-config":
 		debugf("git.emoji %q", os.Args[1:])
+		loadConfig()
+		fmt.Println("Current config:", allTypes)
 		writeConfigFile(allTypes)
 
 	case "rev-parse":
