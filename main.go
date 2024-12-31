@@ -22,10 +22,8 @@ func main() {
 	}
 
 	switch arg {
-	case "":
+	case "", "emoji":
 		printHelp()
-
-	case "-gmoji-":
 		os.Exit(0)
 
 	case "write-config":
