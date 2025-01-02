@@ -29,7 +29,6 @@ func main() {
 	case "write-config":
 		debugf("git.emoji %q", os.Args[1:])
 		loadConfig()
-		fmt.Println("Current config:", allTypes)
 		writeConfigFile(allTypes)
 
 	case "rev-parse":
@@ -49,10 +48,12 @@ func main() {
 	case "setup-hooks":
 		debugf("git.emoji %q", os.Args[1:])
 		setupHooks()
+		infof("✅ Successfully setup git hooks")
 
 	case "remove-hooks":
 		debugf("git.emoji %q", os.Args[1:])
 		removeHooks()
+		infof("✅ Successfully removed git hooks")
 
 	case "commit":
 		if !isOptOut() {
@@ -241,7 +242,7 @@ func askFlagType(firstLine string) (_ *Type, idx int) {
 func printHelp() {
 	msg := `git.emoji - git commit with emoji
 
-git.emoji is a tool to commit your changes with emoji. It will setup git hooks to commit with emoji, and can be used as a wrapper of git.
+git.emoji is a tool to commit your changes with emoji. It provides a simple command-line interface to help you select the right emoji for your commit. It will setup git hooks to commit with emoji, and can be used as a wrapper of git.
 
 SETUP:
   git.emoji setup-hooks
@@ -253,7 +254,8 @@ USAGE:
   git.emoji commit -ch   -m 'message'   # Chore
   git.emoji commit -ch1  -m 'message'   # Chore
 
-OPTIONAL: set git.emoji as git alias:
+OPTIONAL: add this to your .zshrc or .bashrc:
+
   alias git=git.emoji
 
 then use git.emoji as git alias:
@@ -262,6 +264,10 @@ then use git.emoji as git alias:
   git commit -ft1  -m 'message'   # Features
   git commit -ch   -m 'message'   # Chore
   git commit -ch1  -m 'message'   # Chore
+
+CONFIG: run this command to customize your emoji:
+
+  git.emoji write-config
 `
 	printf(os.Stderr, "%s", msg)
 }

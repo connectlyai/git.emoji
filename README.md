@@ -1,16 +1,21 @@
 # git.emoji
 
-git.emoji is a tool to commit your changes with emoji. It will setup git hooks to commit with emoji, and can be used as a wrapper of git.
+git.emoji is a tool written in Go that allows you to use emojis in your commit messages. It provides a simple command-line interface to help you select the right emoji for your commit. It will setup git hooks to commit with emoji, and can be used as a wrapper of git.
+
+Whether you are fixing a bug, adding a new feature, or updating documentation, you can now express yourself with emojis!
+
+Read more at the [introduction article](https://blog.connectly.ai/commit-your-code-in-style-with-git-emoji-d9ac745ee155).
 
 ## Install
+
+### Install from source
+
+Download Go from [official website](https://go.dev/doc/install)
 
 ```bash
 git clone github.com/connectlyai/git.emoji
 cd git.emoji
-go install .
-
-which git.emoji
-# 👉 make sure you have git.emoji in the PATH
+./build.sh
 ```
 
 ## Setup
@@ -42,8 +47,10 @@ git.emoji write-config
 
 to save the default config to your favourite place. Currently, it supports:
 
-- .git/emoji.config
-- emoji.config
+- `<YOUR_REPOSITORY>/.git/emoji.config`
+- `<YOUR_REPOSITORY>/emoji.config`
+
+With the first way, you can customize and share the emojis with your team in the repository. With the second way, you can customize the emojis for your local repository only.
 
 You can then edit the file to customize your emoji.
 

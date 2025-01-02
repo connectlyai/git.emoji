@@ -87,9 +87,9 @@ func loadConfig() {
 func writeConfigFile(config []*Type) {
 	current, ok := findConfigFile()
 	if ok {
-		infof("Current config file: %s\n", current)
+		infof("👉 Current config file: %s\n", current)
 	} else {
-		infof("No config file found.\n")
+		infof("👉 No config file found.\n")
 	}
 	infof("Where do you want to write the config file?\n")
 	for i, file := range defaultConfigFiles() {
@@ -104,8 +104,8 @@ func writeConfigFile(config []*Type) {
 		}
 		file := defaultConfigFiles()[id-1]
 		must(0, os.WriteFile(file, marshalConfigFile(config), 0644))
-		infof("config file written to %s\n", file)
-		os.Exit(0)
+		infof("✅ Successfully write config file to %s", file)
+		return
 	}
 }
 
