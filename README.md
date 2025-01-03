@@ -6,11 +6,13 @@ Whether you are fixing a bug, adding a new feature, or updating documentation, y
 
 Read more at the [introduction article](https://blog.connectly.ai/commit-your-code-in-style-with-git-emoji-d9ac745ee155).
 
+[![git.emoji](_/a.png)](a.mov)
+
 ## Install
 
 ### Install from source
 
-Download Go from [official website](https://go.dev/doc/install)
+Download Go from [official website](https://go.dev/doc/install), then run:
 
 ```bash
 git clone github.com/connectlyai/git.emoji
@@ -29,7 +31,7 @@ which git.emoji
 git.emoji setup-hooks
 ```
 
-You can optionally use git.emoji as git alias:
+You can optionally use git.emoji as git alias by adding this to your `.bashrc` or `.zshrc`:
 
 ```bash
 alias git=git.emoji
@@ -45,12 +47,12 @@ To customize your emoji, use:
 git.emoji write-config
 ```
 
-to save the default config to your favourite place. Currently, it supports:
+to save the default [emoji.config](emoji.config) to your favourite place. Currently, it supports:
 
 - `<YOUR_REPOSITORY>/.git/emoji.config`
 - `<YOUR_REPOSITORY>/emoji.config`
 
-With the first way, you can customize and share the emojis with your team in the repository. With the second way, you can customize the emojis for your local repository only.
+With the first way, you can customize the emojis for your local repository only. With the second way, you can customize and share the emojis with your team in the repository.
 
 You can then edit the file to customize your emoji.
 
@@ -112,6 +114,10 @@ git commit -ft1  -m 'message'   # ✨ Features
 git commit -ch   -m 'message'   # 🧼 Chore
 git commit -ch1  -m 'message'   # 🧹 Chore
 ```
+
+### 4. It works with rebase, merge, and other git commands
+
+Not just committing, whenever you use git commands that involve committing, such as `rebase`, `merge`, or `cherry-pick`, if there is a commit message without emoji, git.emoji will prompt you to select an emoji for the commit message. This way, you can ensure that all your commits are consistent and expressive.
 
 ## Author
 
