@@ -169,7 +169,7 @@ func execCommit(args []string) {
 
 func askFlagType(firstLine string) (_ *Type, idx int) {
 	reNum := regexp.MustCompile(`^\d+`)
-	reTxt := regexp.MustCompile(`^\w+`)
+	reTxt := regexp.MustCompile(`^[a-z]+`)
 	parse := func(re *regexp.Regexp, s string) (string, string, bool) {
 		first := re.FindString(s)
 		return first, strings.TrimPrefix(s, first), first != ""
@@ -222,6 +222,9 @@ func askFlagType(firstLine string) (_ *Type, idx int) {
 			typ := mapTypes[first]
 			if typ == nil {
 				continue
+			}
+			if second == "" {
+				return typ, 0
 			}
 			var err error
 			idx, err = strconv.Atoi(second)

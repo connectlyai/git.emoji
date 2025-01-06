@@ -82,6 +82,12 @@ func loadConfig() {
 		debugf("no config file found")
 		allTypes = defaultConfig()
 	}
+	mapTypes = make(map[string]*Type)
+	for _, typ := range allTypes {
+		for _, alias := range typ.Alias {
+			mapTypes[alias] = typ
+		}
+	}
 }
 
 func writeConfigFile(config []*Type) {
