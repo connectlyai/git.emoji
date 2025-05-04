@@ -22,10 +22,18 @@ func main() {
 	}
 
 	switch arg {
-	case "", "emoji":
+	case "", "emoji", "help", "-h", "--help":
 		printHelp()
 		os.Exit(0)
+	}
 
+	// if not in git repo, run git command directly
+	if !_tryInit() {
+		execGit(os.Args[1:])
+		return
+	}
+
+	switch arg {
 	case "write-config":
 		debugf("git.emoji %q", os.Args[1:])
 		loadConfig()
@@ -63,6 +71,7 @@ func main() {
 			return
 		}
 		fallthrough
+
 	default:
 		setupHooks()
 		execGit(os.Args[1:])
@@ -82,7 +91,7 @@ func which(command string, env []string) string {
 }
 
 func execGit(args []string) {
-	debugf("%v %q", origGit, args)
+	debugf("%v %q", origGit(), args)
 
 	cmd := exec.Command(origGit(), args...)
 	cmd.Stdin, cmd.Stdout, cmd.Stderr = os.Stdin, os.Stdout, os.Stderr
@@ -99,7 +108,7 @@ func execGit(args []string) {
 }
 
 func execGitx(args ...string) (string, string, error) {
-	debugf("%v %q", origGit, args)
+	debugf("%v %q", origGit(), args)
 
 	stdout, stderr := &strings.Builder{}, &strings.Builder{}
 	cmd := exec.Command(origGit(), args...)
@@ -272,6 +281,12 @@ CONFIG: run this command to customize your emoji:
 
   git.emoji write-config
 `
+	gitHelp, _, _ := execGitx("--help")
+	gitHelp = strings.TrimSpace(gitHelp)
+	if gitHelp != "" {
+		msg += "\n\n⎯⎯⎯\n\n" + gitHelp
+	}
+
 	printf(os.Stderr, "%s", msg)
 }
 

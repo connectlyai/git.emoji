@@ -9,7 +9,7 @@ if ! go version &> /dev/null; then
 fi
 
 # cd to the root directory
-cd $(git rev-parse --show-toplevel)
+cd "$(git rev-parse --show-toplevel)"
 
 # install to $GOPATH/bin
 go install .

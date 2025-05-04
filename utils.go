@@ -9,13 +9,17 @@ import (
 	"strings"
 )
 
-var isDebug = os.Getenv("GIT_EMOJI_DEBUG") == "1"
+var (
+	isDebug       = os.Getenv("GIT_EMOJI_DEBUG") == "1"
+	msgNotGitRepo = "not a git repository"
 
-var _origGit string
-var _emojiGit string
-var _rootRepoDir string // the top level directory of the project
-var _rootGitDir string  // the .git directory of the project
-var _isRootRepo bool    // is it the root repository
+	_origGit      string
+	_emojiGit     string
+	_rootRepoDir  string // the top level directory of the project
+	_rootGitDir   string // the .git directory of the project
+	_isInitInRepo bool   // is it initialized in the repository
+	_isRootRepo   bool   // is it the root repository
+)
 
 func origGit() string {
 	if _origGit != "" {
@@ -42,8 +46,15 @@ func rootRepoDir() string {
 }
 
 func _init() {
+	if !_tryInit() {
+		fatalf(msgNotGitRepo)
+	}
+}
+
+// return true if it's init in a git repository
+func _tryInit() bool {
 	if _rootRepoDir != "" {
-		return
+		return _isInitInRepo
 	}
 	gmust := func(stderr string, err error, msg string, args ...any) {
 		if err != nil {
@@ -54,10 +65,15 @@ func _init() {
 	}
 
 	gtop, gerr, err := execGitx("rev-parse", "--show-toplevel")
-	gmust(gerr, err, "not a git directory")
+	if strings.Contains(gerr, msgNotGitRepo) {
+		_isInitInRepo = false // not a git repository
+		return false
+	}
+	gmust(gerr, err, msgNotGitRepo)
+	_isInitInRepo = true
 
 	gdir, gerr, err := execGitx("rev-parse", "--git-dir")
-	gmust(gerr, err, "not a git directory")
+	gmust(gerr, err, msgNotGitRepo)
 
 	debugf("git dir %q", gdir)
 	gtop = must(filepath.Abs(gtop))
@@ -70,11 +86,12 @@ func _init() {
 	} else {
 		idx := strings.LastIndex(gdir, ".git")
 		if idx <= 0 {
-			fatalf("not a git directory (can not find the repository root dir)")
+			fatalf("not a git repository (can not find the repository root dir)")
 		}
 		_rootRepoDir = gdir[:idx]
 		_rootGitDir = filepath.Join(_rootRepoDir, ".git")
 	}
+	return _isInitInRepo
 }
 
 func findEmojiGit() string {
