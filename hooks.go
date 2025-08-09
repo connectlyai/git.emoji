@@ -28,10 +28,19 @@ SHA1=$3
 
 func hookContent(hook string) string {
 	return fmt.Sprintf(`%s
-if [[ -x %s ]]; then
-    %s gmoji-%s "$@" < /dev/tty || exit $?
+GIT_EMOJI_BIN=%q
+if [[ -x "$GIT_EMOJI_BIN" ]]; then
+  if [[ -c /dev/tty ]]; then
+    if exec 0</dev/tty 2>/dev/null; then
+      "$GIT_EMOJI_BIN" gmoji-%s "$@" < /dev/tty || exit $?
+    else
+      "$GIT_EMOJI_BIN" gmoji-%s "$@" || exit $?
+    fi
+  else
+    "$GIT_EMOJI_BIN" gmoji-%s "$@" || exit $?
+  fi
 fi
-%s`, gmojiStartMark, emojiGit(), emojiGit(), hook, gmojiEndMark)
+%s`, gmojiStartMark, emojiGit(), hook, hook, hook, gmojiEndMark)
 }
 
 func setupHooks() bool {
