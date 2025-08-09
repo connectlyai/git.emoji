@@ -163,9 +163,14 @@ func execPrepareCommitMsg(args []string) {
 		return
 	}
 
-	flagType, idx := askFlagType(firstLine)
-	emoji := flagType.Icons[idx]
-	debugf("emoji: %v", emoji)
+	emoji := "🚧"
+	if isTtyAvailable() {
+		flagType, idx := askFlagType(firstLine)
+		emoji = flagType.Icons[idx]
+		debugf("emoji: %v", emoji)
+	} else {
+		debugf("no tty available, using fallback emoji: %v", emoji)
+	}
 
 	var b bytes.Buffer
 	wroteExtra, wroteEmoji := false, false
@@ -245,4 +250,16 @@ func commitMsgFile(commitMsgFile string) string {
 	}
 	fatalf("COMMIT_MSG_FILE not found: %v", commitMsgFile)
 	return ""
+}
+
+func isTtyAvailable() bool {
+	if _, err := os.Stat("/dev/tty"); err != nil {
+		return false
+	}
+	file, err := os.OpenFile("/dev/tty", os.O_RDONLY, 0)
+	if err != nil {
+		return false
+	}
+	defer file.Close()
+	return true
 }
