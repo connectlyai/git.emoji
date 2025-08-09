@@ -145,7 +145,7 @@ func execCommitMsg(args []string) {
 		fmt.Println("--------------------------------------------------")
 		fmt.Println(strings.Split(dataStr, "\n")[0])
 		fmt.Println("--------------------------------------------------")
-		fatalf("commit message must start with an emoji")
+		errorf("commit message must start with an emoji")
 	}
 }
 
